@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload Your Photo</title>
+</head>
+<body>
+  <h1 class="title">
+    <span class="english-title">Traces of Us - </span> 
+    <span class="arabic-title">أثـرنـا</span>
+  </h1>
+  <div class="prompt">
+    <p>Every photo holds a story. Share an image that carries meaning—family, a place, or a tradition. It will be printed live and added to our growing collection of memories.</p>
+  </div>
+  <div class="upload-section">
+      <h1>Upload Your Photo</h1>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <label for="photoInput" class="custom-file-label">Choose File</label>
+        <input type="file" name="photo" id="photoInput" accept="image/*" required>
+        <button type="submit" id="button">Print</button>
+      </form>
+  <img id="preview" src="#" alt="Photo Preview" style="display:none; max-width: 300px;">
+  </div>
+
+  
+ 
+  <script src="index.js" defer></script>
+  <link rel="stylesheet" href="style.css">
+</body>
+</html>
