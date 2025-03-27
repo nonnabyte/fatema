@@ -70,24 +70,39 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// handle photo upload: upload file to Cloudinary then save details to MongoDB
 app.post('/upload', upload.single('photo'), async (req, res) => {
     try {
+        console.log("Received upload request");
         if (!req.file) {
+            console.log("No file in request");
             return res.status(400).json({ error: 'No file uploaded' });
         }
+        console.log("File received:", req.file);
+
+        // Ensure MongoDB connection is ready
+        if (!imageCollection) {
+            console.log("MongoDB not connected; reconnecting...");
+            await connectToMongo();
+            if (!imageCollection) {
+                throw new Error("MongoDB connection failed");
+            }
+        }
+
         const result = await cloudinary.uploader.upload(req.file.path, {
             folder: "uploads"
         });
+        console.log("Cloudinary upload result:", result);
+
         fs.unlink(req.file.path, (err) => {
             if (err) console.error('Error deleting local file:', err);
         });
-        // save image details in MongoDB
+
         const imageData = {
             url: result.secure_url,
             public_id: result.public_id,
             createdAt: new Date()
         };
+        console.log("Inserting image data into MongoDB:", imageData);
         await imageCollection.insertOne(imageData);
         res.json({
             message: 'Photo uploaded successfully!',
@@ -99,6 +114,7 @@ app.post('/upload', upload.single('photo'), async (req, res) => {
     }
 });
 
+
 app.get('/upload', (req, res) => {
     res.send("This endpoint only supports POST requests for file uploads.");
 });
@@ -107,6 +123,13 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ error: err.message || 'Something went wrong!' });
 });
+
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+    });
+}
+
 
 module.exports = app;
 
