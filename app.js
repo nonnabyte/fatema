@@ -98,6 +98,10 @@ app.post('/upload', upload.single('photo'), async (req, res) => {
     }
 });
 
+app.get('/upload', (req, res) => {
+    res.send("This endpoint only supports POST requests for file uploads.");
+});
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ error: err.message || 'Something went wrong!' });
