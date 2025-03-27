@@ -5,7 +5,7 @@ const cloudinary = require('cloudinary').v2;
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const path = require('path');
 const fs = require('fs');
-const app = express(); 
+const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Configure Cloudinary
@@ -16,7 +16,7 @@ cloudinary.config({
 });
 
 // MongoDB connection
-const uri = process.env.MONGODB_URI; 
+const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
@@ -103,9 +103,5 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: err.message || 'Something went wrong!' });
 });
 
-// start the server
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`Static files served from: ${path.join(__dirname, 'public')}`);
-});
+module.exports = app;
 
